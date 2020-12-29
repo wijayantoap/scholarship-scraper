@@ -7,8 +7,10 @@ const puppeteerConfig = () => {
 
   // Add adblocker plugin, which will transparently block ads in all pages you
   // create using puppeteer.
-  const AdblockerPlugin = require("puppeteer-extra-plugin-adblocker");
-  puppeteer.use(AdblockerPlugin({ blockTrackers: true }));
+  // disabled until it is fixed https://github.com/berstend/puppeteer-extra/issues/90
+
+  // const AdblockerPlugin = require("puppeteer-extra-plugin-adblocker");
+  // puppeteer.use(AdblockerPlugin({ blockTrackers: true }));
 
   return puppeteer;
 };

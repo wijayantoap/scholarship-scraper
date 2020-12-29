@@ -10,6 +10,19 @@ const searchIndbeasiswa = async (pageNumber) => {
 
   const page = await browser.newPage();
 
+  //turns request interceptor on
+  await page.setRequestInterception(true);
+
+  //if the page makes a  request to a resource type of image or stylesheet then abort that request
+  page.on("request", (request) => {
+    if (
+      request.resourceType() === "image" ||
+      request.resourceType() === "stylesheet"
+    )
+      request.abort();
+    else request.continue();
+  });
+
   await page.goto(`https://indbeasiswa.com/page/${pageNumber}?s=beasiswa)`);
 
   await page.waitForSelector("div[class=content-inner]");

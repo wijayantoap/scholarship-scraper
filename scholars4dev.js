@@ -10,6 +10,19 @@ const searchScholars4Dev = async (pageNumber) => {
 
   const page = await browser.newPage();
 
+  //turns request interceptor on
+  await page.setRequestInterception(true);
+
+  //if the page makes a  request to a resource type of image or stylesheet then abort thatrequest
+  page.on("request", (request) => {
+    if (
+      request.resourceType() === "image" ||
+      request.resourceType() === "stylesheet"
+    )
+      request.abort();
+    else request.continue();
+  });
+
   await page.goto(`https://www.scholars4dev.com/page/${pageNumber}/`);
 
   await page.waitForSelector("div[class=maincontent2]");

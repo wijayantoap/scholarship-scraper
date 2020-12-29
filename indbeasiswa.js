@@ -13,8 +13,6 @@ const searchIndbeasiswa = async (pageNumber) => {
 
   await page.waitForSelector("div[class=content-inner]");
 
-  await page.screenshot({ path: "buddy-screenshot.png" });
-
   const searchResults = await page.$$eval(
     "div[class=post-right]",
     (results) => {

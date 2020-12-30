@@ -2,7 +2,7 @@ const puppeteerConfig = require("./puppeteerConfig");
 
 const puppeteer = puppeteerConfig();
 
-const searchScholars4DevCategory = async (url) => {
+const searchIndbeasiswaSitemap = async () => {
   const browser = await puppeteer.launch({
     headless: true,
     args: ["--no-sandbox"],
@@ -23,28 +23,24 @@ const searchScholars4DevCategory = async (url) => {
     else request.continue();
   });
 
-  await page.goto(url);
+  await page.goto("https://indbeasiswa.com/sitemap");
 
-  await page.waitForSelector("div[class=maincontent]");
+  await page.waitForSelector("article");
 
-  const searchResults = await page.$$eval(".entry", (results) => {
+  const searchResults = await page.$eval("article", (results) => {
     let data = [];
 
-    results.forEach((result) => {
-      const title = result.querySelector("h2 > a").innerText;
+    results
+      .querySelectorAll("div")[1]
+      .querySelectorAll("ul")[1]
+      .querySelectorAll("li")
+      .forEach((result) => {
+        const title = result.querySelector("a").innerText;
 
-      const url = result.querySelector("h2 > a").href;
+        const url = result.querySelector("a").href;
 
-      const details = result
-        .querySelectorAll("div[class=post_column_1]")[0]
-        .querySelector("p").innerText;
-
-      const date = result
-        .querySelectorAll("div[class=post_column_1]")[1]
-        .querySelector("p").innerText;
-
-      data.push({ title, url, details, date });
-    });
+        data.push({ title, url });
+      });
 
     return data;
   });
@@ -54,4 +50,4 @@ const searchScholars4DevCategory = async (url) => {
   return searchResults;
 };
 
-module.exports = searchScholars4DevCategory;
+module.exports = searchIndbeasiswaSitemap;

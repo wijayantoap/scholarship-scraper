@@ -10,6 +10,8 @@ const searchScholars4DevCategory = require("./scholars4DevCategory");
 
 const searchIndbeasiswa = require("./indbeasiswa");
 const searchIndbeasiswaPost = require("./indbeasiswaPost");
+const searchIndbeasiswaSitemap = require("./indbeasiswaSitemap");
+const searchIndbeasiswaCategory = require("./indbeasiswaCategory");
 
 app.get("/scholars4dev", (request, response) => {
   const page = request.query.page;
@@ -38,9 +40,23 @@ app.get("/scholars4dev/post", (request, response) => {
 });
 
 app.get("/scholars4dev/sitemap", (request, response) => {
+  let page = parseInt(request.query.page);
+  if (!page) {
+    page = 1;
+  }
   searchScholars4DevSitemap().then((results) => {
-    response.status(200);
-    response.json(results);
+    const pageCount = Math.ceil(Object.keys(results).length / 10);
+    if (page > pageCount) {
+      response.status(400);
+      response.end();
+    } else {
+      response.status(200);
+      response.json({
+        page: page,
+        pageCount: pageCount,
+        posts: results.slice(page * 10 - 10, page * 10),
+      });
+    }
   });
 });
 
@@ -83,6 +99,40 @@ app.get("/indbeasiswa/post", (request, response) => {
   }
 });
 
-app.get("/", (req, res) => res.send("Web Scraper by Wapp Lab"));
+app.get("/indbeasiswa/sitemap", (request, response) => {
+  let page = parseInt(request.query.page);
+  if (!page) {
+    page = 1;
+  }
+  searchIndbeasiswaSitemap().then((results) => {
+    const pageCount = Math.ceil(Object.keys(results).length / 10);
+    if (page > pageCount) {
+      response.status(400);
+      response.end();
+    } else {
+      response.status(200);
+      response.json({
+        page: page,
+        pageCount: pageCount,
+        posts: results.slice(page * 10 - 10, page * 10),
+      });
+    }
+  });
+});
+
+app.get("/indbeasiswa/category", (request, response) => {
+  const url = request.query.url;
+
+  if (url != null) {
+    searchIndbeasiswaCategory(url).then((results) => {
+      response.status(200);
+      response.json(results);
+    });
+  } else {
+    response.end();
+  }
+});
+
+app.get("/", (req, res) => res.send("Scholarship Scraper by Wapp Lab"));
 
 app.listen(port, ip);

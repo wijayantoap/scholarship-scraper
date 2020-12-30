@@ -5,6 +5,9 @@ const port = process.env.PORT || 8080;
 
 const searchScholars4Dev = require("./scholars4Dev");
 const searchScholars4DevPost = require("./scholars4DevPost");
+const searchScholars4DevSitemap = require("./scholars4DevSitemap");
+const searchScholars4DevCategory = require("./scholars4DevCategory");
+
 const searchIndbeasiswa = require("./indbeasiswa");
 const searchIndbeasiswaPost = require("./indbeasiswaPost");
 
@@ -26,6 +29,26 @@ app.get("/scholars4dev/post", (request, response) => {
 
   if (url != null) {
     searchScholars4DevPost(url).then((results) => {
+      response.status(200);
+      response.json(results);
+    });
+  } else {
+    response.end();
+  }
+});
+
+app.get("/scholars4dev/sitemap", (request, response) => {
+  searchScholars4DevSitemap().then((results) => {
+    response.status(200);
+    response.json(results);
+  });
+});
+
+app.get("/scholars4dev/category", (request, response) => {
+  const url = request.query.url;
+
+  if (url != null) {
+    searchScholars4DevCategory(url).then((results) => {
       response.status(200);
       response.json(results);
     });

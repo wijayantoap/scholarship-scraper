@@ -50,13 +50,9 @@ const searchIndbeasiswaCategory = async (url) => {
     }
   );
 
-  console.log(searchResults);
-
   await browser.close();
 
   return searchResults;
 };
-
-searchIndbeasiswaCategory();
 
 module.exports = searchIndbeasiswaCategory;

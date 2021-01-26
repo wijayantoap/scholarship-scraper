@@ -79,7 +79,7 @@ app.get("/indbeasiswa", (request, response) => {
   if (page != null) {
     searchIndbeasiswa(page).then((results) => {
       response.status(200);
-      response.json({ results, url });
+      response.json({ results });
     });
   } else {
     response.redirect("/indbeasiswa?page=1");
